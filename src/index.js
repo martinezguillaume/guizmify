@@ -1,13 +1,35 @@
 import React from 'react'
 import { View } from 'react-native'
 import { Provider } from 'react-redux'
+import PropTypes from 'prop-types'
 import compose from 'recompose/compose'
-import store from './store'
+import lifecycle from 'recompose/lifecycle'
+import withContext from 'recompose/withContext'
 
-export default compose()(function Root(props) {
-	return (
-		<Provider store={store}>
-			<View />
-		</Provider>
-	)
+import { withConstants, withStoreProps } from '../modules/decorators'
+import store, { actions } from './store'
+
+export default compose(
+	withContext(
+		{
+			actions: PropTypes.objectOf(PropTypes.func).isRequired,
+			store: PropTypes.object.isRequired,
+		},
+		() => ({
+			actions,
+			store,
+		}),
+	),
+	withConstants,
+	withStoreProps(['user']),
+	lifecycle({
+		componentDidMount() {
+			const {
+				actions,
+			} = this.props
+			actions.requestToken()
+		},
+	}),
+)(function Root(props) {
+	return <View />
 })
