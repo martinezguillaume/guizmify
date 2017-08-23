@@ -5,9 +5,19 @@
   "author": null,
   "private": true,
   "main": "node_modules/expo/AppEntry.js",
+  "scripts": {
+    "postinstall": "rndebugger-open --expo"
+  },
   "dependencies": {
     "expo": "^20.0.0",
+    "lodash": "^4.17.4",
     "react": "16.0.0-alpha.12",
-    "react-native": "https://github.com/expo/react-native/archive/sdk-20.0.0.tar.gz"
+    "react-native": "https://github.com/expo/react-native/archive/sdk-20.0.0.tar.gz",
+    "react-redux": "^5.0.6",
+    "recompose": "^0.25.0",
+    "redux": "^3.7.2"
+  },
+  "devDependencies": {
+    "react-native-debugger-open": "^0.3.12"
   }
 }
