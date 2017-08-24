@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import {
+  Alert,
   ActivityIndicator,
   Text,
   Image,
@@ -87,15 +88,21 @@ const styles = StyleSheet.create({
 const soundObject = new Audio.Sound()
 const emojis = ['♥️', '🙃', '😴', '😇', '🤓', '🤑', '👩🏻‍🚀']
 Notifications.addListener(() => {})
+
 const playTrack = async track => {
+  soundObject.unloadAsync()
   const emoji = emojis[random(emojis.length - 1)]
   Notifications.presentLocalNotificationAsync({
     title: 'Guizmify',
     body: `${emoji} T\'es en train d\'écouter ${track.name} ! ${emoji}`,
   })
-  soundObject.unloadAsync()
-  await soundObject.loadAsync({ uri: track.preview_url }, null, false)
-  await soundObject.playAsync()
+
+  soundObject
+    .loadAsync({ uri: track.preview_url }, null, false)
+    .then(() => {
+      soundObject.playAsync()
+    })
+    .catch(() => Alert.alert('Erreur', 'Ce son ne peut pas être joué 😩'))
 }
 
 const keyExtractor = item => item.id
