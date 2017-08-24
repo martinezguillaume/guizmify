@@ -7,7 +7,7 @@ const initialState = {
   list: {},
   next: null,
   search: [],
-  topTracks: {},
+  topTracks: [],
   isLoading: false,
   isValid: false,
   limit: 20,
@@ -47,7 +47,7 @@ function topTracks(state = initialState.search, action) {
   switch (action.type) {
     case 'setTopTracks':
       return assign({}, state, {
-        [action.artistId]: action.topTracks,
+        [action.artistId]: map(action.topTracks, track => track.id),
       })
     default:
       return state

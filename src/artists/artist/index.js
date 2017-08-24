@@ -87,16 +87,9 @@ const styles = StyleSheet.create({
 
 const soundObject = new Audio.Sound()
 const emojis = ['♥️', '🙃', '😴', '😇', '🤓', '🤑', '👩🏻‍🚀']
-Notifications.addListener(() => {})
 
 const playTrack = async track => {
   soundObject.unloadAsync()
-  const emoji = emojis[random(emojis.length - 1)]
-  Notifications.presentLocalNotificationAsync({
-    title: 'Guizmify',
-    body: `${emoji} T\'es en train d\'écouter ${track.name} ! ${emoji}`,
-  })
-
   soundObject
     .loadAsync({ uri: track.preview_url }, null, false)
     .then(() => {
@@ -105,39 +98,18 @@ const playTrack = async track => {
     .catch(() => Alert.alert('Erreur', 'Ce son ne peut pas être joué 😩'))
 }
 
-const keyExtractor = item => item.id
-
-const Track = ({ item }) => {
-  const { album: { name: albumName, images }, name } = item
-  const albumImage = last(images)
-  return (
-    <ListItem
-      component={TouchableOpacity}
-      containerStyle={styles.itemContainerStyle}
-      avatar={
-        <Avatar
-          source={albumImage && { uri: albumImage.url }}
-          title={albumName[0]}
-        />
-      }
-      onPress={() => playTrack(item)}
-      titleStyle={styles.itemTitle}
-      subtitleStyle={styles.itemSubtitle}
-      title={name}
-      subtitle={albumName}
-      chevronColor="rgba(255, 255, 255, 0.7)"
-    />
-  )
-}
-
 const Separator = () => <Divider style={styles.divider} />
 
 export default compose(
   withConstants,
   withStoreProps(
-    ({ artists }, { navigation: { state: { params: { artistId } } } }) => ({
+    (
+      { artists, tracks },
+      { navigation: { state: { params: { artistId } } } },
+    ) => ({
       artist: artists.list[artistId],
       topTracks: artists.topTracks[artistId],
+      tracks,
     }),
   ),
   lifecycle({
@@ -146,8 +118,33 @@ export default compose(
       this.props.actions.requestArtistTopTracks(artist.id)
     },
   }),
+  withHandlers({
+    renderItem: ({ tracks }) => ({ item }) => {
+      const track = tracks.list[item]
+      const { album: { name: albumName, images }, name } = track
+      const albumImage = last(images)
+      return (
+        <ListItem
+          component={TouchableOpacity}
+          containerStyle={styles.itemContainerStyle}
+          avatar={
+            <Avatar
+              source={albumImage && { uri: albumImage.url }}
+              title={albumName[0]}
+            />
+          }
+          onPress={() => playTrack(item)}
+          titleStyle={styles.itemTitle}
+          subtitleStyle={styles.itemSubtitle}
+          title={name}
+          subtitle={albumName}
+          chevronColor="rgba(255, 255, 255, 0.7)"
+        />
+      )
+    },
+  }),
 )(function Artist(props) {
-  const { artist, topTracks, navigation } = props
+  const { artist, topTracks, navigation, renderItem } = props
   return (
     <LinearGradient
       colors={['#F44336', '#E91E63']}
@@ -187,9 +184,9 @@ export default compose(
           </View>
         : <FlatList
             ItemSeparatorComponent={Separator}
-            keyExtractor={keyExtractor}
+            keyExtractor={identity}
             data={topTracks}
-            renderItem={Track}
+            renderItem={renderItem}
           />}
     </LinearGradient>
   )
