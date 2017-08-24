@@ -4,7 +4,6 @@ import {
   ActivityIndicator,
   Text,
   Image,
-  ImageBackground,
   RefreshControl,
   FlatList,
   LayoutAnimation,
@@ -73,6 +72,7 @@ const styles = StyleSheet.create({
     width: 150,
     height: 150,
     margin: 16,
+    borderRadius: 4,
   },
   artistContainer: {
     flex: 1,
@@ -80,6 +80,7 @@ const styles = StyleSheet.create({
     height: 150,
     alignItems: 'center',
     justifyContent: 'center',
+    borderRadius: 4,
   },
   artistName: {
     backgroundColor: 'transparent',
@@ -137,7 +138,7 @@ export default compose(
         </Text>
         <Text style={styles.listEmptyText}>
           {home.search === ''
-            ? 'Cherchez un artiste !'
+            ? 'Cherche un artiste !'
             : 'Aucun artiste trouvé !'}
         </Text>
       </View>,
@@ -172,13 +173,10 @@ export default compose(
             <View flex={3} />
             {ArtistName}
           </View>
-        : <ImageBackground
-            style={styles.artisteImageBackground}
-            source={{ uri: image }}
-          >
+        : <Image style={styles.artisteImageBackground} source={{ uri: image }}>
             <View flex={3} />
             {ArtistName}
-          </ImageBackground>
+          </Image>
       return (
         <TouchableOpacity
           onPress={() => navigation.navigate('Artist', { artistId: item })}
@@ -207,7 +205,7 @@ export default compose(
   } = props
   return (
     <LinearGradient
-      colors={['#3F51B5', '#2196F3']}
+      colors={['#3F51B5', '#673AB7']}
       start={[0.5, 0]}
       end={[0, 0.5]}
       style={styles.container}
@@ -253,7 +251,7 @@ export default compose(
               <RefreshControl
                 refreshing={artists.isLoading}
                 onRefresh={actions.requestArtists}
-                title="Pull to refresh"
+                title="Tire pour rafraichir"
                 tintColor="white"
                 titleColor="white"
               />

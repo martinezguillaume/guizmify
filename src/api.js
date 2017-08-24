@@ -19,6 +19,14 @@ export default {
         }),
       ),
   },
+  artist: {
+    topTracks: artistId =>
+      request.get(`artists/${artistId}/top-tracks`, {
+        params: {
+          country: 'US',
+        },
+      }),
+  },
   search: (type, q, offset, limit) =>
     request.get('search', {
       params: {

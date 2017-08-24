@@ -7,6 +7,7 @@ const initialState = {
   list: {},
   next: null,
   search: [],
+  topTracks: {},
   isLoading: false,
   isValid: false,
   limit: 20,
@@ -42,13 +43,22 @@ function search(state = initialState.search, action) {
   }
 }
 
+function topTracks(state = initialState.search, action) {
+  switch (action.type) {
+    case 'setTopTracks':
+      return assign({}, state, {
+        [action.artistId]: action.topTracks,
+      })
+    default:
+      return state
+  }
+}
 function next(state = initialState.next, action) {
   switch (action.type) {
     case 'clearArtists':
       return null
     case 'addArtists':
     case 'setArtists':
-      console.log('action', action)
       return action.artists.next
     default:
       return state
@@ -106,6 +116,7 @@ export default combineReducers({
   next,
   limit,
   offset,
+  topTracks,
   search,
   isValid,
   isLoading,

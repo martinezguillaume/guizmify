@@ -1,3 +1,5 @@
+export * from './artist/actions'
+
 export const requestArtists = () => {
   return (dispatch, getState, { api }) => {
     dispatch({ type: 'readArtists' })
