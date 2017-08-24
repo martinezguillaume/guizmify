@@ -1,7 +1,7 @@
-import qs from 'qs';
-import request from '../modules/tools/request';
+import qs from 'qs'
+import request from '../modules/tools/request'
 
-import { CLIENT_ID, REDIRECT_URI, AUTHORIZATION_TOKEN } from './setup';
+import { CLIENT_ID, REDIRECT_URI, AUTHORIZATION_TOKEN } from './setup'
 
 export default {
   user: {
@@ -16,14 +16,16 @@ export default {
         },
         qs.stringify({
           grant_type: 'client_credentials',
-        })
+        }),
       ),
   },
-  search: (type, q) =>
+  search: (type, q, offset, limit) =>
     request.get('search', {
       params: {
         type,
         q,
+        limit,
+        offset,
       },
     }),
-};
+}

@@ -1,6 +1,7 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React from 'react'
+import PropTypes from 'prop-types'
 import {
+  ActivityIndicator,
   Text,
   Image,
   ImageBackground,
@@ -10,24 +11,23 @@ import {
   TouchableOpacity,
   StyleSheet,
   View,
-} from 'react-native';
-import { Input } from 'react-native-elements';
-import { AppLoading, LinearGradient, Constants } from 'expo';
-import { SimpleLineIcons } from '@expo/vector-icons';
-import { Provider } from 'react-redux';
-import compose from 'recompose/compose';
-import withPropsOnChange from 'recompose/withPropsOnChange';
-import withHandlers from 'recompose/withHandlers';
-import withState from 'recompose/withState';
+} from 'react-native'
+import { Input } from 'react-native-elements'
+import { AppLoading, LinearGradient, Constants } from 'expo'
+import { SimpleLineIcons } from '@expo/vector-icons'
+import { Provider } from 'react-redux'
+import compose from 'recompose/compose'
+import withPropsOnChange from 'recompose/withPropsOnChange'
+import withHandlers from 'recompose/withHandlers'
+import withState from 'recompose/withState'
 
-import debounce from 'lodash/debounce';
-import identity from 'lodash/identity';
-import forEach from 'lodash/forEach';
+import debounce from 'lodash/debounce'
+import identity from 'lodash/identity'
+import forEach from 'lodash/forEach'
 
-import { withConstants, withStoreProps } from '../../modules/decorators';
+import { withConstants, withStoreProps } from '../../modules/decorators'
 
-const ARTIST_IMAGE_WIDTH = 150;
-
+const ARTIST_IMAGE_WIDTH = 150
 
 const styles = StyleSheet.create({
   container: {
@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
     height: 200,
   },
   inputContainer: {
-    paddingLeft: 8,
+    paddingLeft: 4,
     borderRadius: 40,
     borderWidth: 1,
     borderColor: 'white',
@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
   listEmptyComponent: {
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'transparent',    
+    backgroundColor: 'transparent',
   },
   listEmptyEmoji: {
     fontSize: 90,
@@ -104,22 +104,17 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: 'bold',
   },
-});
-
+})
 
 const getArtistImage = artist => {
-  const { images } = artist;
-  let res = null;
-  forEach(images, image => (image.width < ARTIST_IMAGE_WIDTH ? null : (res = image.url)));
-  return res;
-};
-
-const ListEmptyComponent = (
-  <View style={styles.listEmptyComponent}>
-    <Text style={styles.listEmptyEmoji}>😭</Text>
-    <Text style={styles.listEmptyText}>Aucun artiste trouvé !</Text>
-  </View>
-);
+  const { images } = artist
+  let res = null
+  forEach(
+    images,
+    image => (image.width < ARTIST_IMAGE_WIDTH ? null : (res = image.url)),
+  )
+  return res
+}
 
 export default compose(
   withConstants,
@@ -130,88 +125,141 @@ export default compose(
   withState('isFirstLaunch', 'setFirstLaunch', true),
   withHandlers({
     setFirstLaunch: ({ setFirstLaunch }) => isFirstLaunch => {
-      LayoutAnimation.easeInEaseOut();
-      setFirstLaunch(isFirstLaunch);
+      LayoutAnimation.easeInEaseOut()
+      setFirstLaunch(isFirstLaunch)
     },
+    ListEmptyComponent: ({ artists, home }) => () =>
+      !artists.isLoading &&
+      artists.isValid &&
+      <View style={styles.listEmptyComponent}>
+        <Text style={styles.listEmptyEmoji}>
+          {home.search === '' ? '😚' : '😭'}
+        </Text>
+        <Text style={styles.listEmptyText}>
+          {home.search === ''
+            ? 'Cherchez un artiste !'
+            : 'Aucun artiste trouvé !'}
+        </Text>
+      </View>,
   }),
   withHandlers({
     onChangeText: ({ actions, requestArtists, setFirstLaunch }) => query => {
       if (query === '') {
-        requestArtists.cancel();
-        actions.clearArtists();
+        requestArtists.cancel()
+        actions.clearArtists()
+        actions.setSearch(query)
+        return
       }
-      setFirstLaunch(false);
-      actions.setSearch(query);
-      requestArtists();
+      setFirstLaunch(false)
+      actions.setSearch(query)
+      requestArtists()
     },
-    renderItem: ({ artists }) => ({ item }) => {
-      const artist = artists.list[item];
-      const image = getArtistImage(artist);
+    renderItem: ({ artists, navigation }) => ({ item }) => {
+      const artist = artists.list[item]
+      const image = getArtistImage(artist)
       const ArtistName = (
         <LinearGradient
           colors={['transparent', 'rgba(0, 0, 0, 0.87)']}
-          style={styles.artistContainer}>
+          style={styles.artistContainer}
+        >
           <Text style={styles.artistName}>
             {artist.name}
           </Text>
         </LinearGradient>
-      );
+      )
       const ArtistImage = !image
         ? <View style={[styles.artisteImageBackground, styles.noArtistImage]}>
             <View flex={3} />
             {ArtistName}
           </View>
-        : <ImageBackground style={styles.artisteImageBackground} source={{ uri: image }}>
+        : <ImageBackground
+            style={styles.artisteImageBackground}
+            source={{ uri: image }}
+          >
             <View flex={3} />
             {ArtistName}
-          </ImageBackground>;
+          </ImageBackground>
       return (
-        <TouchableOpacity flex={1} width={150} height={150}>
+        <TouchableOpacity
+          onPress={() => navigation.navigate('Artist', { artistId: item })}
+          flex={1}
+          width={150}
+          height={150}
+        >
           {ArtistImage}
         </TouchableOpacity>
-      );
+      )
     },
-  })
+    ListFooterComponent: ({ artists }) => () =>
+      artists.next &&
+      <ActivityIndicator style={{ marginBottom: 8 }} color="white" />,
+  }),
 )(function Home(props) {
-  const { actions, artists, renderItem, onChangeText, home: { search }, isFirstLaunch } = props;
+  const {
+    actions,
+    artists,
+    renderItem,
+    onChangeText,
+    home: { search },
+    isFirstLaunch,
+    ListEmptyComponent,
+    ListFooterComponent,
+  } = props
   return (
     <LinearGradient
       colors={['#3F51B5', '#2196F3']}
       start={[0.5, 0]}
       end={[0, 0.5]}
-      style={styles.container}>
+      style={styles.container}
+    >
       <View style={[styles.searchContainer, isFirstLaunch && { flex: 1 }]}>
         {isFirstLaunch &&
-          <Image source={require('../../assets/icons/app-icon.png')} style={styles.logo} />}
+          <Image
+            source={require('../../assets/icons/app-icon.png')}
+            style={styles.logo}
+          />}
         <Input
           containerStyle={styles.inputContainer}
           inputStyle={styles.inputStyle}
           onChangeText={onChangeText}
           value={search}
+          icon={
+            <SimpleLineIcons
+              name="magnifier"
+              color="white"
+              style={{ backgroundColor: 'transparent' }}
+              size={20}
+            />
+          }
           placeholder="Search your artist"
           placeholderTextColor="rgba(255, 255, 255, 0.54)"
           selectionColor="white"
         />
       </View>
       <View style={styles.listContainer}>
-        <FlatList
-          ListEmptyComponent={ListEmptyComponent}
-          contentContainerStyle={styles.list}
-          data={artists.search}
-          renderItem={renderItem}
-          keyExtractor={identity}
-          numColumns={2}
-          refreshControl={
-            <RefreshControl
-              refreshing={artists.isLoading}
-              onRefresh={actions.requestArtists}
-              title="Pull to refresh"
-              tintColor="white"
-              titleColor="white"
-            />
-          }
-        />
+        {!isFirstLaunch &&
+          <FlatList
+            ListEmptyComponent={ListEmptyComponent}
+            contentContainerStyle={styles.list}
+            data={artists.search}
+            renderItem={renderItem}
+            keyExtractor={identity}
+            numColumns={2}
+            keyboardDismissMode="on-drag"
+            keyboardShouldPersistTap="handled"
+            onEndReached={actions.requestMoreArtists}
+            ListFooterComponent={ListFooterComponent}
+            refreshControl={
+              <RefreshControl
+                refreshing={artists.isLoading}
+                onRefresh={actions.requestArtists}
+                title="Pull to refresh"
+                tintColor="white"
+                titleColor="white"
+              />
+            }
+          />}
       </View>
     </LinearGradient>
-  );
-});
+  )
+})
