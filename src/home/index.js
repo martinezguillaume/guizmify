@@ -96,6 +96,13 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: 'bold',
   },
+  dedicace: {
+    fontWeight: 'bold',
+    textAlign: 'center',
+    color: 'white',
+    backgroundColor: 'transparent',
+    fontSize: 14,
+  },
 });
 
 const getArtistImage = artist => {
@@ -194,7 +201,10 @@ export default compose(
       style={styles.container}>
       <View style={[styles.searchContainer, isFirstLaunch && { flex: 1 }]}>
         {isFirstLaunch &&
-          <Image source={require('../../assets/icons/app-icon.png')} style={styles.logo} />}
+          <View alignItems="center">
+            <Image source={require('../../assets/icons/app-icon.png')} style={styles.logo} />
+            <Text style={styles.dedicace}>Guizmify, for yoloSam. with love.</Text>
+          </View>}
         <Input
           containerStyle={styles.inputContainer}
           inputStyle={styles.inputStyle}
