@@ -1,28 +1,15 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import {
-  TouchableOpacity,
-  Dimensions,
-  StyleSheet,
-  View,
-  Text,
-} from 'react-native'
-import { Avatar, ListItem } from 'react-native-elements'
-import { BlurView } from 'expo'
-import { SimpleLineIcons } from '@expo/vector-icons'
-import compose from 'recompose/compose'
-import setPropTypes from 'recompose/setPropTypes'
-import pure from 'recompose/pure'
-import withHandlers from 'recompose/withHandlers'
-import { StackNavigator } from 'react-navigation'
+import React from 'react';
+import { TouchableOpacity, Dimensions, StyleSheet } from 'react-native';
+import { Avatar, ListItem } from 'react-native-elements';
+import { BlurView } from 'expo';
+import { SimpleLineIcons } from '@expo/vector-icons';
+import compose from 'recompose/compose';
+import pure from 'recompose/pure';
+import withHandlers from 'recompose/withHandlers';
 
-import last from 'lodash/last'
+import last from 'lodash/last';
 
-import { withConstants, withStoreProps } from '../../modules/decorators'
-
-import Home from '../home'
-import Artist from '../artists/artist'
-import store from '../store'
+import { withConstants, withStoreProps } from '../../modules/decorators';
 
 const styles = StyleSheet.create({
   container: {
@@ -37,7 +24,7 @@ const styles = StyleSheet.create({
   itemSubtitle: {
     color: 'rgba(0, 0, 0, 0.54)',
   },
-})
+});
 
 export default compose(
   pure,
@@ -49,21 +36,16 @@ export default compose(
   withHandlers({
     onPressMusicControl: ({ actions, isPlaying }) => () =>
       isPlaying ? actions.pauseTrack() : actions.resumeTrack(),
-  }),
+  })
 )(function PlayerBar(props) {
-  const { onPressMusicControl, isPlaying, track } = props
-  const trackImage = track && last(track.album.images)
+  const { onPressMusicControl, isPlaying, track } = props;
+  const trackImage = track && last(track.album.images);
   return !track
     ? null
     : <BlurView style={styles.container} tint="light" intensity={90}>
         <ListItem
           containerStyle={styles.trackContainerStyle}
-          avatar={
-            <Avatar
-              source={trackImage && { uri: trackImage.url }}
-              title={track.name[0]}
-            />
-          }
+          avatar={<Avatar source={trackImage && { uri: trackImage.url }} title={track.name[0]} />}
           titleStyle={styles.itemTitle}
           subtitleStyle={styles.itemSubtitle}
           title={track.name}
@@ -79,5 +61,5 @@ export default compose(
             </TouchableOpacity>
           }
         />
-      </BlurView>
-})
+      </BlurView>;
+});

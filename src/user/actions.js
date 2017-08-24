@@ -1,1 +1,1 @@
-export * from './token/actions'
+export * from './token/actions';

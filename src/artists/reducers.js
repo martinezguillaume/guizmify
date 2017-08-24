@@ -1,7 +1,7 @@
-import { combineReducers } from 'redux'
-import fromPairs from 'lodash/fromPairs'
-import map from 'lodash/map'
-import assign from 'lodash/assign'
+import { combineReducers } from 'redux';
+import fromPairs from 'lodash/fromPairs';
+import map from 'lodash/map';
+import assign from 'lodash/assign';
 
 const initialState = {
   list: {},
@@ -12,34 +12,30 @@ const initialState = {
   isValid: false,
   limit: 20,
   offset: 0,
-}
+};
 
 function list(state = initialState.list, action) {
   switch (action.type) {
     case 'clearArtists':
-      return {}
+      return {};
     case 'addArtists':
     case 'setArtists':
-      return assign(
-        {},
-        state,
-        fromPairs(map(action.artists.items, item => [item.id, item])),
-      )
+      return assign({}, state, fromPairs(map(action.artists.items, item => [item.id, item])));
     default:
-      return state
+      return state;
   }
 }
 
 function search(state = initialState.search, action) {
   switch (action.type) {
     case 'clearArtists':
-      return []
+      return [];
     case 'setArtists':
-      return map(action.artists.items, 'id')
+      return map(action.artists.items, 'id');
     case 'addArtists':
-      return [...state, ...map(action.artists.items, 'id')]
+      return [...state, ...map(action.artists.items, 'id')];
     default:
-      return state
+      return state;
   }
 }
 
@@ -48,66 +44,66 @@ function topTracks(state = initialState.search, action) {
     case 'setTopTracks':
       return assign({}, state, {
         [action.artistId]: map(action.topTracks, track => track.id),
-      })
+      });
     default:
-      return state
+      return state;
   }
 }
 function next(state = initialState.next, action) {
   switch (action.type) {
     case 'clearArtists':
-      return null
+      return null;
     case 'addArtists':
     case 'setArtists':
-      return action.artists.next
+      return action.artists.next;
     default:
-      return state
+      return state;
   }
 }
 
 function offset(state = initialState.offset, action) {
   switch (action.type) {
     case 'clearArtists':
-      return 0
+      return 0;
     case 'setArtists':
-      return initialState.limit
+      return initialState.limit;
     case 'addArtists':
-      return state + initialState.limit
+      return state + initialState.limit;
     default:
-      return state
+      return state;
   }
 }
 
 function limit(state = initialState.limit, action) {
   switch (action.type) {
     default:
-      return state
+      return state;
   }
 }
 
 function isLoading(state = initialState.isLoading, action) {
   switch (action.type) {
     case 'readArtists':
-      return true
+      return true;
     case 'clearArtists':
     case 'setArtists':
-      return false
+      return false;
     default:
-      return state
+      return state;
   }
 }
 
 function isValid(state = initialState.isValid, action) {
   switch (action.type) {
     case 'setSearch':
-      return action.search === ''
+      return action.search === '';
     case 'clearArtists':
     case 'setArtists':
-      return true
+      return true;
     case 'invalidateArtists':
-      return false
+      return false;
     default:
-      return state
+      return state;
   }
 }
 
@@ -120,4 +116,4 @@ export default combineReducers({
   search,
   isValid,
   isLoading,
-})
+});

@@ -1,5 +1,4 @@
 import { combineReducers } from 'redux';
-import fromPairs from 'lodash/fromPairs';
 
 const initialState = {
   search: '',

@@ -1,41 +1,24 @@
-import React from 'react'
-import PropTypes from 'prop-types'
+import React from 'react';
 import {
-  Alert,
   ActivityIndicator,
-  Text,
-  Image,
-  ImageBackground,
-  RefreshControl,
   FlatList,
-  LayoutAnimation,
-  TouchableOpacity,
+  Image,
   StyleSheet,
+  Text,
+  TouchableOpacity,
   View,
-} from 'react-native'
-import { Avatar, ListItem, Input, Divider } from 'react-native-elements'
-import {
-  AppLoading,
-  LinearGradient,
-  Constants,
-  Audio,
-  Notifications,
-} from 'expo'
-import { SimpleLineIcons } from '@expo/vector-icons'
-import { Provider } from 'react-redux'
-import compose from 'recompose/compose'
-import withPropsOnChange from 'recompose/withPropsOnChange'
-import withHandlers from 'recompose/withHandlers'
-import withState from 'recompose/withState'
-import lifecycle from 'recompose/lifecycle'
+} from 'react-native';
+import { Avatar, ListItem, Input, Divider } from 'react-native-elements';
+import { Constants, LinearGradient } from 'expo';
+import { SimpleLineIcons } from '@expo/vector-icons';
+import compose from 'recompose/compose';
+import withHandlers from 'recompose/withHandlers';
+import lifecycle from 'recompose/lifecycle';
 
-import debounce from 'lodash/debounce'
-import identity from 'lodash/identity'
-import forEach from 'lodash/forEach'
-import last from 'lodash/last'
-import random from 'lodash/random'
+import identity from 'lodash/identity';
+import last from 'lodash/last';
 
-import { withConstants, withStoreProps } from '../../../modules/decorators'
+import { withConstants, withStoreProps } from '../../../modules/decorators';
 
 const styles = StyleSheet.create({
   artistContainer: {
@@ -83,43 +66,33 @@ const styles = StyleSheet.create({
     height: 0.5,
     marginLeft: 54,
   },
-})
+});
 
-const Separator = () => <Divider style={styles.divider} />
+const Separator = () => <Divider style={styles.divider} />;
 
 export default compose(
   withConstants,
-  withStoreProps(
-    (
-      { artists, tracks },
-      { navigation: { state: { params: { artistId } } } },
-    ) => ({
-      artist: artists.list[artistId],
-      topTracks: artists.topTracks[artistId],
-      tracks,
-    }),
-  ),
+  withStoreProps(({ artists, tracks }, { navigation: { state: { params: { artistId } } } }) => ({
+    artist: artists.list[artistId],
+    topTracks: artists.topTracks[artistId],
+    tracks,
+  })),
   lifecycle({
     componentDidMount() {
-      const { actions, artist } = this.props
-      this.props.actions.requestArtistTopTracks(artist.id)
+      const { actions, artist } = this.props;
+      this.props.actions.requestArtistTopTracks(artist.id);
     },
   }),
   withHandlers({
     renderItem: ({ actions, tracks }) => ({ item }) => {
-      const track = tracks.list[item]
-      const { album: { name: albumName, images }, name } = track
-      const albumImage = last(images)
+      const track = tracks.list[item];
+      const { album: { name: albumName, images }, name } = track;
+      const albumImage = last(images);
       return (
         <ListItem
           component={TouchableOpacity}
           containerStyle={styles.itemContainerStyle}
-          avatar={
-            <Avatar
-              source={albumImage && { uri: albumImage.url }}
-              title={albumName[0]}
-            />
-          }
+          avatar={<Avatar source={albumImage && { uri: albumImage.url }} title={albumName[0]} />}
           onPress={() => actions.playTrack(track)}
           titleStyle={styles.itemTitle}
           subtitleStyle={styles.itemSubtitle}
@@ -127,41 +100,24 @@ export default compose(
           subtitle={albumName}
           chevronColor="rgba(255, 255, 255, 0.7)"
         />
-      )
+      );
     },
-  }),
+  })
 )(function Artist(props) {
-  const { artist, topTracks, navigation, renderItem } = props
+  const { artist, topTracks, navigation, renderItem } = props;
   return (
     <LinearGradient
       colors={['#F44336', '#E91E63']}
       start={[0.5, 0]}
       end={[0, 0.5]}
-      style={styles.container}
-    >
-      <TouchableOpacity
-        onPress={() => navigation.goBack()}
-        style={styles.backIconTouchable}
-      >
-        <SimpleLineIcons
-          name="arrow-left"
-          color="white"
-          size={24}
-          style={styles.backIcon}
-        />
+      style={styles.container}>
+      <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backIconTouchable}>
+        <SimpleLineIcons name="arrow-left" color="white" size={24} style={styles.backIcon} />
       </TouchableOpacity>
       <View style={styles.artistContainer}>
         {artist.images.length > 0 &&
-          <Image
-            style={styles.artistImage}
-            source={{ uri: artist.images[0].url }}
-          />}
-        <Text
-          style={[
-            styles.artistName,
-            artist.images.length === 0 && { marginTop: 0 },
-          ]}
-        >
+          <Image style={styles.artistImage} source={{ uri: artist.images[0].url }} />}
+        <Text style={[styles.artistName, artist.images.length === 0 && { marginTop: 0 }]}>
           {artist.name}
         </Text>
       </View>
@@ -176,5 +132,5 @@ export default compose(
             renderItem={renderItem}
           />}
     </LinearGradient>
-  )
-})
+  );
+});

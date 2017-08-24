@@ -1,7 +1,7 @@
-import qs from 'qs'
-import request from '../modules/tools/request'
+import qs from 'qs';
+import request from '../modules/tools/request';
 
-import { CLIENT_ID, REDIRECT_URI, AUTHORIZATION_TOKEN } from './setup'
+import { AUTHORIZATION_TOKEN } from './setup';
 
 export default {
   user: {
@@ -16,7 +16,7 @@ export default {
         },
         qs.stringify({
           grant_type: 'client_credentials',
-        }),
+        })
       ),
   },
   artist: {
@@ -36,4 +36,4 @@ export default {
         offset,
       },
     }),
-}
+};
