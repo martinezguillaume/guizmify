@@ -1,14 +1,13 @@
-export function requestToken(username, password) {
+export const requestToken = (username, password) => {
 	return (dispatch, getState, { api }) => {
 		dispatch({ type: 'requestToken' })
 		return api.user
-			.authorize()
-			.then(result => {
-				console.log(result)
-				// dispatch(setToken(result.token))
-				// dispatch(setLogin(result.user.login))
-				// return result.token
-			})
-			.catch(error => console.log('error', error))
+			.token()
+			.then(({ access_token }) => dispatch(setUserToken(access_token)))
 	}
 }
+
+export const setUserToken = token => ({
+	type: 'setUserToken',
+	token,
+})

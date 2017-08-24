@@ -1,0 +1,19 @@
+import { combineReducers } from 'redux';
+import fromPairs from 'lodash/fromPairs';
+
+const initialState = {
+  search: '',
+};
+
+function search(state = initialState.search, action) {
+  switch (action.type) {
+    case 'setSearch':
+      return action.search;
+    default:
+      return state;
+  }
+}
+
+export default combineReducers({
+  search,
+});

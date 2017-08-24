@@ -1,25 +1,34 @@
 {
-  "name": "react-native-spotify-example",
-  "version": "0.0.0",
-  "description": "Hello Expo!",
-  "author": null,
-  "private": true,
-  "main": "node_modules/expo/AppEntry.js",
-  "scripts": {
-    "postinstall": "rndebugger-open --expo"
-  },
-  "dependencies": {
-    "expo": "^20.0.0",
-    "lodash": "^4.17.4",
-    "prop-types": "^15.5.10",
-    "react": "16.0.0-alpha.12",
-    "react-native": "https://github.com/expo/react-native/archive/sdk-20.0.0.tar.gz",
-    "react-redux": "^5.0.6",
-    "recompose": "^0.25.0",
-    "redux": "^3.7.2",
-    "redux-thunk": "^2.2.0"
-  },
-  "devDependencies": {
-    "react-native-debugger-open": "^0.3.12"
-  }
+	"name": "react-native-spotify-example",
+	"version": "0.0.0",
+	"description": "Hello Expo!",
+	"author": "martinezguillaume",
+	"private": true,
+	"main": "node_modules/expo/AppEntry.js",
+	"scripts": {
+		"postinstall": "rndebugger-open --expo"
+	},
+	"dependencies": {
+		"expo": "^20.0.0",
+		"lodash": "^4.17.4",
+		"prop-types": "^15.5.10",
+		"qs": "^6.5.0",
+		"react": "16.0.0-alpha.12",
+		"react-native": "https://github.com/expo/react-native/archive/sdk-20.0.0.tar.gz",
+		"react-native-elements": "https://github.com/react-native-training/react-native-elements.git#v1",
+		"react-navigation": "^1.0.0-beta.11",
+		"react-redux": "^5.0.6",
+		"recompose": "^0.25.0",
+		"redux": "^3.7.2",
+		"redux-thunk": "^2.2.0"
+	},
+	"devDependencies": {
+		"eslint": "^4.5.0",
+		"eslint-config-expo": "^6.0.0",
+		"prettier": "^1.5.3",
+		"react-native-debugger-open": "^0.3.12"
+	},
+	"eslintConfig": {
+		"extends": "expo/native"
+	}
 }
