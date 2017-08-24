@@ -85,19 +85,6 @@ const styles = StyleSheet.create({
   },
 })
 
-const soundObject = new Audio.Sound()
-const emojis = ['♥️', '🙃', '😴', '😇', '🤓', '🤑', '👩🏻‍🚀']
-
-const playTrack = async track => {
-  soundObject.unloadAsync()
-  soundObject
-    .loadAsync({ uri: track.preview_url }, null, false)
-    .then(() => {
-      soundObject.playAsync()
-    })
-    .catch(() => Alert.alert('Erreur', 'Ce son ne peut pas être joué 😩'))
-}
-
 const Separator = () => <Divider style={styles.divider} />
 
 export default compose(
@@ -119,7 +106,7 @@ export default compose(
     },
   }),
   withHandlers({
-    renderItem: ({ tracks }) => ({ item }) => {
+    renderItem: ({ actions, tracks }) => ({ item }) => {
       const track = tracks.list[item]
       const { album: { name: albumName, images }, name } = track
       const albumImage = last(images)
@@ -133,7 +120,7 @@ export default compose(
               title={albumName[0]}
             />
           }
-          onPress={() => playTrack(item)}
+          onPress={() => actions.playTrack(track)}
           titleStyle={styles.itemTitle}
           subtitleStyle={styles.itemSubtitle}
           title={name}

@@ -31,6 +31,8 @@ const enhancer = compose(
 const configureStore = () => {
   const reducers = (state, action) => {
     switch (action.type) {
+      case 'setIsPlaying':
+      case 'setSelectedTrack':
       case 'setTopTracks':
       case 'clearArtists':
       case 'addArtists':
