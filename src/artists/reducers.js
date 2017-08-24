@@ -11,6 +11,8 @@ const initialState = {
 
 function list(state = initialState.list, action) {
   switch (action.type) {
+    case 'clearArtists':
+      return {};
     case 'setArtists':
       return fromPairs(map(action.artists, item => [item.id, item]));
     default:
@@ -20,6 +22,8 @@ function list(state = initialState.list, action) {
 
 function search(state = initialState.search, action) {
   switch (action.type) {
+    case 'clearArtists':
+      return [];
     case 'setArtists':
       return map(action.artists, 'id');
     default:
@@ -31,6 +35,7 @@ function isLoading(state = initialState.isLoading, action) {
   switch (action.type) {
     case 'readArtists':
       return true;
+    case 'clearArtists':
     case 'setArtists':
       return false;
     default:
@@ -40,6 +45,7 @@ function isLoading(state = initialState.isLoading, action) {
 
 function isValid(state = initialState.isValid, action) {
   switch (action.type) {
+    case 'clearArtists':
     case 'setArtists':
       return true;
     default:
