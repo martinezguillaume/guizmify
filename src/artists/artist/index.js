@@ -104,13 +104,13 @@ export default compose(
     },
   })
 )(function Artist(props) {
-  const { artist, topTracks, navigation, renderItem } = props;
+  const { artist, topTracks, navigation, renderItem, tracks: { selectedTrack } } = props;
   return (
     <LinearGradient
       colors={['#F44336', '#E91E63']}
       start={[0.5, 0]}
       end={[0, 0.5]}
-      style={styles.container}>
+      style={[styles.container, selectedTrack && { paddingBottom: 54 }]}>
       <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backIconTouchable}>
         <SimpleLineIcons name="arrow-left" color="white" size={24} style={styles.backIcon} />
       </TouchableOpacity>

@@ -114,7 +114,7 @@ const getArtistImage = artist => {
 
 export default compose(
   withConstants,
-  withStoreProps(['artists', 'home']),
+  withStoreProps(['artists', 'home', 'tracks.selectedTrack']),
   withPropsOnChange(['actions'], ({ actions }) => ({
     requestArtists: debounce(actions.requestArtists, 400),
   })),
@@ -192,13 +192,14 @@ export default compose(
     isFirstLaunch,
     ListEmptyComponent,
     ListFooterComponent,
+    tracks: { selectedTrack },
   } = props;
   return (
     <LinearGradient
       colors={['#3F51B5', '#673AB7']}
       start={[0.5, 0]}
       end={[0, 0.5]}
-      style={styles.container}>
+      style={[styles.container, selectedTrack && { paddingBottom: 54 }]}>
       <View style={[styles.searchContainer, isFirstLaunch && { flex: 1 }]}>
         {isFirstLaunch &&
           <View alignItems="center">
